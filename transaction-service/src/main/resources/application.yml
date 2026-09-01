@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: transaction-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:55432/transaction_db
+    username: ${TRANSACTION_APP_USER}
+    password: ${TRANSACTION_APP_PASSWORD}
+
+management:
+  endpoint:
+    health:
+      show-details: always
