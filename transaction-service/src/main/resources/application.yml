@@ -7,6 +7,14 @@ spring:
     username: ${TRANSACTION_APP_USER}
     password: ${TRANSACTION_APP_PASSWORD}
 
+  flyway:
+    url: ${TRANSACTION_DB_URL:jdbc:postgresql://localhost:55432/transaction_db}
+    user: ${TRANSACTION_MIGRATOR_USER}
+    password: ${TRANSACTION_MIGRATOR_PASSWORD}
+    schemas: flyway
+    default-schema: flyway
+    create-schemas: true
+
 management:
   endpoint:
     health:
