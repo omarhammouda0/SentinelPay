@@ -2,6 +2,8 @@ package com.sentinelpay.service;
 
 import com.sentinelpay.entity.Transaction;
 import com.sentinelpay.enums.Status;
+import com.sentinelpay.event.TransactionCreatedEvent;
+import com.sentinelpay.event.TransactionEventProducer;
 import com.sentinelpay.records.TransactionRequest;
 import com.sentinelpay.repo.AccountRepo;
 import com.sentinelpay.repo.TransactionRepo;
@@ -25,6 +27,7 @@ public class TransactionService {
 
     private final TransactionRepo transactionRepo;
     private final AccountRepo accountRepo;
+    private final TransactionEventProducer eventPublisher;
 
     public void validateTransaction(TransactionRequest transaction) {
 
@@ -66,7 +69,21 @@ public class TransactionService {
         var savedTransaction =  transactionRepo.save(newTransaction);
         log.info("Transaction with ID {} created successfully", newTransaction.getId());
 
+        var transactionEvent = TransactionCreatedEvent.builder ()
+
+                .eventId (UUID.randomUUID ())
+                .transactionId (savedTransaction.getId ())
+                .accountId (savedTransaction.getAccountId ())
+                .amount (savedTransaction.getAmount ())
+                .currency (savedTransaction.getCurrency ())
+                .createdAt (savedTransaction.getCreatedAt ())
+
+                .build ();
+
+        eventPublisher.publishTransactionCreated ( transactionEvent );
+
         return new TransactionResponse(
+
                 savedTransaction.getId(),
                 savedTransaction.getStatus(),
                 savedTransaction.getCreatedAt()
