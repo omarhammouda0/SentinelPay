@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: risk-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:55432/risk_db
+    username: ${RISK_APP_USER}
+    password: ${RISK_APP_PASSWORD}
+
+  flyway:
+    url: ${RISK_DB_URL:jdbc:postgresql://localhost:55432/risk_db}
+    user: ${RISK_MIGRATOR_USER}
+    password: ${RISK_MIGRATOR_PASSWORD}
+    schemas: flyway
+    default-schema: flyway
+    create-schemas: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: risk-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.sentinelpay.event
+
+    producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
+
+server:
+  port: 8082
+
+management:
+  endpoint:
+    health:
+      show-details: always
