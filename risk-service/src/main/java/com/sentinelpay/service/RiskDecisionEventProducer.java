@@ -1,6 +1,7 @@
-package com.sentinelpay.event;
+package com.sentinelpay.service;
 
 
+import com.sentinelpay.event.RiskDecisionEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
